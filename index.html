@@ -50,6 +50,11 @@
     }
     .history-container {
       margin-top: 30px;
+      max-height: 300px; /* Đặt chiều cao tối đa cho cửa sổ thanh kéo */
+      overflow-y: auto; /* Cho phép cuộn dọc khi danh sách dài */
+      border: 1px solid #444;
+      padding: 10px;
+      background-color: #222;
     }
     .history-list {
       list-style-type: none;
@@ -59,6 +64,21 @@
     .history-item {
       font-size: 20px;
       margin: 5px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .history-item button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      font-size: 14px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .history-item button:hover {
+      background-color: #c0392b;
     }
     .clear-history {
       background-color: #e74c3c;
@@ -96,8 +116,8 @@
       <ul id="historyList" class="history-list">
         <!-- Lịch sử sẽ hiển thị ở đây -->
       </ul>
-      <button class="clear-history" onclick="clearHistory()">Xóa lịch sử</button>
     </div>
+    <button class="clear-history" onclick="clearHistory()">Xóa toàn bộ lịch sử</button>
   </div>
 
   <script>
@@ -125,15 +145,26 @@
       const historyList = document.getElementById('historyList');
       historyList.innerHTML = ''; // Xóa danh sách trước khi thêm mới
 
-      history.forEach(number => {
+      history.forEach((number, index) => {
         const listItem = document.createElement('li');
         listItem.classList.add('history-item');
-        listItem.textContent = number;
+        listItem.innerHTML = `
+          ${number} 
+          <button onclick="deleteHistory(${index})">Xóa</button>
+        `;
         historyList.appendChild(listItem);
       });
     }
 
-    // Hàm xóa lịch sử
+    // Hàm xóa một mục trong lịch sử
+    function deleteHistory(index) {
+      let history = JSON.parse(localStorage.getItem('history')) || [];
+      history.splice(index, 1); // Xóa mục ở vị trí index
+      localStorage.setItem('history', JSON.stringify(history));
+      displayHistory();
+    }
+
+    // Hàm xóa toàn bộ lịch sử
     function clearHistory() {
       localStorage.removeItem('history');
       displayHistory();
