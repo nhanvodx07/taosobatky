@@ -50,11 +50,14 @@
     }
     .history-container {
       margin-top: 30px;
-      max-height: 300px; /* Đặt chiều cao tối đa cho cửa sổ thanh kéo */
-      overflow-y: auto; /* Cho phép cuộn dọc khi danh sách dài */
+      max-height: 300px; /* Chiều cao tối đa cho cửa sổ thanh kéo */
+      overflow-y: auto; /* Cho phép cuộn dọc */
       border: 1px solid #444;
       padding: 10px;
       background-color: #222;
+      width: 300px; /* Điều chỉnh chiều rộng cửa sổ danh sách */
+      margin: 0 auto; /* Căn giữa cửa sổ */
+      display: none; /* Ban đầu ẩn cửa sổ lịch sử */
     }
     .history-list {
       list-style-type: none;
@@ -67,6 +70,8 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
+      border-bottom: 1px solid #444;
+      padding: 5px 0;
     }
     .history-item button {
       background-color: #e74c3c;
@@ -93,6 +98,20 @@
     .clear-history:hover {
       background-color: #c0392b;
     }
+    .show-history-btn {
+      margin-top: 20px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .show-history-btn:hover {
+      background-color: #2980b9;
+    }
   </style>
 </head>
 <body>
@@ -111,7 +130,10 @@
     <div class="number-display" id="randomNumber">000000</div>
     <button onclick="generateRandomNumber()">Tạo số</button>
 
-    <div class="history-container">
+    <!-- Nút hiển thị lịch sử -->
+    <button class="show-history-btn" onclick="toggleHistory()">Hiển thị Lịch sử</button>
+
+    <div class="history-container" id="historyContainer">
       <h2>Lịch sử tạo số</h2>
       <ul id="historyList" class="history-list">
         <!-- Lịch sử sẽ hiển thị ở đây -->
@@ -149,7 +171,7 @@
         const listItem = document.createElement('li');
         listItem.classList.add('history-item');
         listItem.innerHTML = `
-          ${number} 
+          <span>${number}</span>
           <button onclick="deleteHistory(${index})">Xóa</button>
         `;
         historyList.appendChild(listItem);
@@ -175,6 +197,12 @@
       const digitCount = parseInt(document.getElementById('digitSelect').value);
       const defaultDisplay = "0".repeat(digitCount);
       document.getElementById('randomNumber').textContent = defaultDisplay;
+    }
+
+    // Hàm ẩn/hiện cửa sổ lịch sử
+    function toggleHistory() {
+      const historyContainer = document.getElementById('historyContainer');
+      historyContainer.style.display = historyContainer.style.display === 'block' ? 'none' : 'block';
     }
 
     // Hiển thị lịch sử khi trang được tải
