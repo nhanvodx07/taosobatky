@@ -48,6 +48,31 @@
       color: #e0e0e0;
       font-size: 18px;
     }
+    .history-container {
+      margin-top: 30px;
+    }
+    .history-list {
+      list-style-type: none;
+      padding: 0;
+      color: #e0e0e0;
+    }
+    .history-item {
+      font-size: 20px;
+      margin: 5px 0;
+    }
+    .clear-history {
+      background-color: #e74c3c;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .clear-history:hover {
+      background-color: #c0392b;
+    }
   </style>
 </head>
 <body>
@@ -65,26 +90,65 @@
     </select>
     <div class="number-display" id="randomNumber">000000</div>
     <button onclick="generateRandomNumber()">Tạo số</button>
+
+    <div class="history-container">
+      <h2>Lịch sử tạo số</h2>
+      <ul id="historyList" class="history-list">
+        <!-- Lịch sử sẽ hiển thị ở đây -->
+      </ul>
+      <button class="clear-history" onclick="clearHistory()">Xóa lịch sử</button>
+    </div>
   </div>
 
   <script>
+    // Hàm tạo số ngẫu nhiên
     function generateRandomNumber() {
-      // Lấy số chữ số từ menu tùy chọn
       const digitCount = parseInt(document.getElementById('digitSelect').value);
-      // Tạo số ngẫu nhiên
       const max = Math.pow(10, digitCount);
       const randomNumber = Math.floor(Math.random() * max);
-      // Chuyển đổi thành chuỗi với số 0 đứng đầu (nếu cần)
       const formattedNumber = randomNumber.toString().padStart(digitCount, '0');
-      // Hiển thị kết quả
       document.getElementById('randomNumber').textContent = formattedNumber;
+      saveHistory(formattedNumber);
     }
 
+    // Hàm lưu lịch sử vào LocalStorage
+    function saveHistory(number) {
+      let history = JSON.parse(localStorage.getItem('history')) || [];
+      history.push(number);
+      localStorage.setItem('history', JSON.stringify(history));
+      displayHistory();
+    }
+
+    // Hàm hiển thị lịch sử
+    function displayHistory() {
+      const history = JSON.parse(localStorage.getItem('history')) || [];
+      const historyList = document.getElementById('historyList');
+      historyList.innerHTML = ''; // Xóa danh sách trước khi thêm mới
+
+      history.forEach(number => {
+        const listItem = document.createElement('li');
+        listItem.classList.add('history-item');
+        listItem.textContent = number;
+        historyList.appendChild(listItem);
+      });
+    }
+
+    // Hàm xóa lịch sử
+    function clearHistory() {
+      localStorage.removeItem('history');
+      displayHistory();
+    }
+
+    // Hàm reset màn hình về giá trị ban đầu
     function resetDisplay() {
-      // Khi đổi tùy chọn, reset số hiển thị về giá trị mặc định
       const digitCount = parseInt(document.getElementById('digitSelect').value);
       const defaultDisplay = "0".repeat(digitCount);
       document.getElementById('randomNumber').textContent = defaultDisplay;
+    }
+
+    // Hiển thị lịch sử khi trang được tải
+    window.onload = function() {
+      displayHistory();
     }
   </script>
 </body>
