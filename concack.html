@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trình Tạo Số Ngẫu Nhiên</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background-color: #121212; /* Nền tối */
+      color: #e0e0e0; /* Màu chữ sáng */
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      margin-top: 50px;
+    }
+    .number-display {
+      font-size: 48px;
+      font-weight: bold;
+      color: #1DB954; /* Màu xanh nổi bật */
+      margin: 20px 0;
+    }
+    button {
+      background-color: #1DB954;
+      color: #121212;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #17a144;
+    }
+    select {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #444;
+      background-color: #333;
+      color: #e0e0e0;
+      margin-bottom: 20px;
+    }
+    label {
+      color: #e0e0e0;
+      font-size: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trình Tạo Số Ngẫu Nhiên</h1>
+    <label for="digitSelect">Chọn số chữ số (1 đến 6):</label>
+    <br>
+    <select id="digitSelect" onchange="resetDisplay()">
+      <option value="1">1 chữ số</option>
+      <option value="2">2 chữ số</option>
+      <option value="3">3 chữ số</option>
+      <option value="4">4 chữ số</option>
+      <option value="5">5 chữ số</option>
+      <option value="6" selected>6 chữ số</option>
+    </select>
+    <div class="number-display" id="randomNumber">000000</div>
+    <button onclick="generateRandomNumber()">Tạo số</button>
+  </div>
+
+  <script>
+    function generateRandomNumber() {
+      // Lấy số chữ số từ menu tùy chọn
+      const digitCount = parseInt(document.getElementById('digitSelect').value);
+      // Tạo số ngẫu nhiên
+      const max = Math.pow(10, digitCount);
+      const randomNumber = Math.floor(Math.random() * max);
+      // Chuyển đổi thành chuỗi với số 0 đứng đầu (nếu cần)
+      const formattedNumber = randomNumber.toString().padStart(digitCount, '0');
+      // Hiển thị kết quả
+      document.getElementById('randomNumber').textContent = formattedNumber;
+    }
+
+    function resetDisplay() {
+      // Khi đổi tùy chọn, reset số hiển thị về giá trị mặc định
+      const digitCount = parseInt(document.getElementById('digitSelect').value);
+      const defaultDisplay = "0".repeat(digitCount);
+      document.getElementById('randomNumber').textContent = defaultDisplay;
+    }
+  </script>
+</body>
+</html>
